@@ -14,7 +14,7 @@ const version = manifest.version || '1.0.0';
 
 const distDir = path.join(rootDir, 'dist');
 const stageDir = path.join(distDir, 'stage');
-const zipPath = path.join(distDir, `syncfav-v${version}-store.zip`);
+const zipPath = path.join(distDir, `favosync-v${version}-store.zip`);
 
 fs.rmSync(stageDir, { recursive: true, force: true });
 fs.mkdirSync(stageDir, { recursive: true });

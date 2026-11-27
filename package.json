@@ -1,6 +1,6 @@
 {
-  "name": "syncfav",
-  "version": "1.2.1",
+  "name": "favosync",
+  "version": "1.2.2",
   "private": true,
   "type": "module",
   "description": "Cross-browser Chromium bookmark sync extension using Google Drive",
