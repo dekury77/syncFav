@@ -266,16 +266,12 @@ el.saveOAuthBtn.addEventListener('click', async () => {
 
 el.connectBtn.addEventListener('click', async () => {
   const clientId = el.clientId.value.trim();
-  if (!clientId) {
-    showToast('먼저 Google OAuth Client ID를 입력해주세요.', true);
-    el.clientId.focus();
-    return;
-  }
+  const clientSecret = el.clientSecret.value.trim();
   el.connectBtn.disabled = true;
   el.connectBtn.textContent = '연결 중...';
   const res = await sendMsg('SIGN_IN', {
     clientId,
-    clientSecret: el.clientSecret.value.trim(),
+    clientSecret,
     driveFolderName: el.driveFolderName.value.trim() || 'SyncFav',
     driveFileName: el.driveFileName.value.trim() || 'bookmarks.json',
   });

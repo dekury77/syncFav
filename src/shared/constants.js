@@ -22,8 +22,8 @@ export const ALARMS = {
  * 일반 사용자는 별도 설정 없이 1클릭으로 Google Drive에 연결할 수 있습니다.
  */
 export const PUBLIC_OAUTH = {
-  clientId: '',
-  proxyUrl: '',
+  clientId: '108946267710-en7rqssdhqgjdarbasrfhlpihu130krg.apps.googleusercontent.com',
+  proxyUrl: 'https://syncfav-oauth-proxy.muon-plaza-3d-portal.workers.dev',
 };
 
 export const DEFAULT_SETTINGS = {
