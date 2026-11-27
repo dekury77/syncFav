@@ -1,6 +1,6 @@
 {
   "name": "syncfav",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "private": true,
   "type": "module",
   "description": "Cross-browser Chromium bookmark sync extension using Google Drive",

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SyncFav - Cross-Browser Bookmark Sync",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "Google Drive를 통해 Ego Lite, Chrome 등 모든 Chromium 브라우저 간 즐겨찾기를 자동 동기화합니다.",
   "permissions": [
     "bookmarks",

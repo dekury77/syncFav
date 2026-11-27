@@ -5,6 +5,7 @@ function sendMsg(type, payload = {}) {
 }
 
 const el = {
+  appVersion: document.getElementById('appVersion'),
   connectionPill: document.getElementById('connectionPill'),
   connectionLabel: document.getElementById('connectionLabel'),
   sidebarSummary: document.getElementById('sidebarSummary'),
@@ -128,6 +129,9 @@ function renderSkinCards() {
 
 // --- Dashboard Data ---
 async function loadDashboard() {
+  if (el.appVersion && chrome.runtime?.getManifest) {
+    el.appVersion.textContent = `Bookmark Sync · v${chrome.runtime.getManifest().version}`;
+  }
   const data = await sendMsg('GET_DASHBOARD_DATA');
   if (!data?.ok) {
     showToast(data?.error || '상태를 불러오지 못했습니다.', true);
