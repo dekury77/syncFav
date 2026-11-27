@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SyncFav</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="brand">
+          <div class="logo-dot">★</div>
+          <div>
+            <h1>SyncFav</h1>
+            <span class="subtitle">Google Drive Bookmark Sync</span>
+          </div>
+        </div>
+        <button id="openOptionsBtn" class="icon-btn" title="설정 열기" aria-label="설정 열기">
+          ⚙
+        </button>
+      </header>
+
+      <section class="status-card">
+        <div class="status-top">
+          <span id="statusBadge" class="badge badge-idle">확인 중...</span>
+          <span id="lastSyncText" class="muted">-</span>
+        </div>
+        <div id="accountRow" class="account-row">
+          <span id="accountEmail" class="account-email">연결되지 않음</span>
+          <span id="drivePath" class="drive-path"></span>
+        </div>
+        <div id="errorBanner" class="error-banner hidden"></div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-value" id="bookmarkCount">0</span>
+            <span class="stat-label">북마크</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-value" id="folderCount">0</span>
+            <span class="stat-label">폴더</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-value" id="autoSyncLabel">ON</span>
+            <span class="stat-label">자동 동기화</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="disconnectedCta" class="cta-card hidden">
+        <p>Google Drive를 연결하면 Ego Lite, Chrome 등 모든 브라우저의 즐겨찾기가 자동 동기화됩니다.</p>
+        <button id="setupBtn" class="btn btn-primary btn-full">Google Drive 설정 및 연결</button>
+      </section>
+
+      <section id="actionsSection" class="actions hidden">
+        <button id="syncNowBtn" class="btn btn-primary btn-full">지금 동기화</button>
+        <div class="secondary-actions">
+          <button id="pushBtn" class="btn btn-secondary" title="내 브라우저 북마크로 Google Drive를 덮어씁니다">
+            ↑ Drive 덮어쓰기
+          </button>
+          <button id="pullBtn" class="btn btn-secondary" title="Google Drive 북마크로 내 브라우저를 덮어씁니다">
+            ↓ 로컬 덮어쓰기
+          </button>
+        </div>
+      </section>
+
+      <section class="logs-section">
+        <div class="section-header">
+          <span>최근 활동</span>
+          <button id="moreOptionsLink" class="link-btn">상세 설정 및 백업 →</button>
+        </div>
+        <ul id="recentLogs" class="log-list">
+          <li class="log-empty">아직 동기화 기록이 없습니다.</li>
+        </ul>
+      </section>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

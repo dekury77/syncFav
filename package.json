@@ -1,0 +1,10 @@
+{
+  "name": "syncfav",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-browser Chromium bookmark sync extension using Google Drive",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}

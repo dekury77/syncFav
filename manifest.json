@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "SyncFav - Cross-Browser Bookmark Sync",
+  "version": "1.0.0",
+  "description": "Google Drive를 통해 Ego Lite, Chrome 등 모든 Chromium 브라우저 간 즐겨찾기를 자동 동기화합니다.",
+  "permissions": [
+    "bookmarks",
+    "storage",
+    "identity",
+    "alarms",
+    "unlimitedStorage"
+  ],
+  "host_permissions": [
+    "https://www.googleapis.com/*",
+    "https://oauth2.googleapis.com/*",
+    "https://accounts.google.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "SyncFav - 즐겨찾기 동기화",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxEzzmuFAPv7nz9py9zjY6bjQ5qauLvRC9HRx3D4eFPmTQqRIBArq7OxVjjX36ILFduyvw6YlBQR2wHcM+g/pP8plTjBk6LPITTZ2RgmHBY+d1bXTa3ou/deiYO9CDADgQlsvATtsMLZ4JKu/6l7VzJ7IZT1UZ/DLEg2S6wVnJi1Lb+mRfAtxbxZD930lBMaPyAl9R9GO7xhnfJndhu88C0hU1gKc+yRCXAwns1p08Yx2+skSEzU9Mop7aqRnj6fDJ35f5EzwNqqgd+Y6zSPyY1UKK5nRggVHl1JbqRFKd1kq3dD0mblmk9virh0VX4oKG/lDflZuFkOhUlCBoLT6ZQIDAQAB"
+}
