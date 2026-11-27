@@ -121,28 +121,28 @@ function renderIcon(size) {
   const ringR = size * 0.345;
   const halfStroke = Math.max(size * 0.048, size <= 16 ? 0.95 : 1.4);
 
-  // 상단 원호: -155도 ~ -25도 (화살촉은 -20도 방향, 시계방향 접선 = +70도)
+  // 상단 원호: -152도 ~ -34도 (화살촉 밑변이 원호 끝에 매끄럽게 연결)
   const deg = (d) => (d * Math.PI) / 180;
   const arc1Start = deg(-152);
-  const arc1End = deg(-26);
-  // 하단 원호: +28도 ~ +154도
+  const arc1End = deg(-34);
+  // 하단 원호: +28도 ~ +146도
   const arc2Start = deg(28);
-  const arc2End = deg(154);
+  const arc2End = deg(146);
 
-  const headLen = size * 0.145;
-  const headWidth = size * 0.14;
+  const headLen = size * 0.16;
+  const headWidth = size * 0.185;
 
   // 상단 원호 끝점 화살촉
-  const tip1Angle = deg(-14);
+  const tip1Angle = deg(-12);
   const tip1X = cx + Math.cos(tip1Angle) * ringR;
   const tip1Y = cy + Math.sin(tip1Angle) * ringR;
-  const arrow1 = makeArrowHead(tip1X, tip1Y, tip1Angle + Math.PI / 2 - deg(10), headLen, headWidth);
+  const arrow1 = makeArrowHead(tip1X, tip1Y, tip1Angle + Math.PI / 2 - deg(16), headLen, headWidth);
 
   // 하단 원호 끝점 화살촉
-  const tip2Angle = deg(166);
+  const tip2Angle = deg(168);
   const tip2X = cx + Math.cos(tip2Angle) * ringR;
   const tip2Y = cy + Math.sin(tip2Angle) * ringR;
-  const arrow2 = makeArrowHead(tip2X, tip2Y, tip2Angle + Math.PI / 2 - deg(10), headLen, headWidth);
+  const arrow2 = makeArrowHead(tip2X, tip2Y, tip2Angle + Math.PI / 2 - deg(16), headLen, headWidth);
 
   // 둥근 끝 캡 위치 (원호 시작점)
   const cap1X = cx + Math.cos(arc1Start) * ringR;
