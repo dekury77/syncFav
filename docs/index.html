@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SyncFav — Cross-Browser Bookmark Sync via Google Drive</title>
+    <style>
+      :root {
+        --bg: #0a0b0e;
+        --surface: #111318;
+        --border: rgba(255, 255, 255, 0.09);
+        --text: #f3f4f6;
+        --muted: #9ba1ae;
+        --accent: #f3f4f6;
+        --accent-fg: #0a0b0e;
+        --ok: #34d399;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 840px; margin: 0 auto; padding: 48px 24px 80px; }
+      header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding-bottom: 24px; border-bottom: 1px solid var(--border);
+      }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+      nav { display: flex; gap: 20px; font-size: 14px; }
+      nav a { color: var(--muted); text-decoration: none; }
+      nav a:hover { color: var(--text); }
+      .hero { padding: 64px 0 48px; }
+      h1 {
+        font-size: clamp(32px, 5vw, 48px);
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 18px;
+      }
+      .lead { color: var(--muted); font-size: 17px; max-width: 60ch; margin-bottom: 28px; }
+      .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 11px 20px; border-radius: 10px; font-weight: 600; font-size: 14px;
+        text-decoration: none; border: 1px solid var(--border);
+      }
+      .btn-primary { background: var(--accent); color: var(--accent-fg); border-color: transparent; }
+      .btn-secondary { background: var(--surface); color: var(--text); }
+      .grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px; margin-top: 24px;
+      }
+      .card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: 14px; padding: 20px;
+      }
+      .card h3 { font-size: 15px; margin-bottom: 8px; }
+      .card p { font-size: 13.5px; color: var(--muted); }
+      footer {
+        margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border);
+        display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+        font-size: 13px; color: var(--muted);
+      }
+      footer a { color: var(--text); text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 9.5A8 8 0 0 1 18.2 6.8" />
+            <polyline points="18.5 3.5 18.8 7.2 15.1 7.4" />
+            <path d="M19.5 14.5A8 8 0 0 1 5.8 17.2" />
+            <polyline points="5.5 20.5 5.2 16.8 8.9 16.6" />
+            <polygon points="12 8.2 13.1 10.6 15.7 10.9 13.8 12.7 14.3 15.3 12 14 9.7 15.3 10.2 12.7 8.3 10.9 10.9 10.6 12 8.2" fill="#FBBF24" stroke="none" />
+          </svg>
+          <span>SyncFav</span>
+        </div>
+        <nav>
+          <a href="#features">Features</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="https://github.com/dekury77/syncFav" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <h1>Sync bookmarks across AI browsers &amp; Chrome — directly in your Google Drive.</h1>
+        <p class="lead">
+          SyncFav is an open-source Chromium extension built for Ego Lite, Chrome, Edge, and Brave.
+          No proprietary cloud, no browser account lock-in — your bookmarks stay 100% in your own Google Drive.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://github.com/dekury77/syncFav" target="_blank" rel="noreferrer">
+            View on GitHub
+          </a>
+          <a class="btn btn-secondary" href="privacy.html">Privacy Policy</a>
+        </div>
+      </section>
+
+      <section id="features" class="grid">
+        <div class="card">
+          <h3>Zero Browser Account Lock-in</h3>
+          <p>Works even in browsers without built-in Google account sync (such as Ego Lite) using standard OAuth 2.0 PKCE.</p>
+        </div>
+        <div class="card">
+          <h3>Smart 3-Way Merge</h3>
+          <p>Delete a bookmark on Computer A and add a new one on Computer B — SyncFav merges both cleanly without duplicates.</p>
+        </div>
+        <div class="card">
+          <h3>Failsafe &amp; Local Backups</h3>
+          <p>Automatically blocks accidental mass deletions and keeps 10 local restore points before applying remote updates.</p>
+        </div>
+        <div class="card">
+          <h3>Minimal Permission Scope</h3>
+          <p>Uses Google Drive's <code>drive.file</code> scope only — SyncFav can only access its own <code>SyncFav/bookmarks.json</code> file.</p>
+        </div>
+      </section>
+
+      <footer>
+        <span>© 2026 SyncFav · MIT License</span>
+        <div>
+          <a href="privacy.html">Privacy Policy</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

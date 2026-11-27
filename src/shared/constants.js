@@ -16,6 +16,16 @@ export const ALARMS = {
   DEBOUNCED_SYNC: 'syncfav_debounced_sync',
 };
 
+/**
+ * 공개 배포(Chrome Web Store)용 OAuth 프록시 설정.
+ * oauth-proxy(Cloudflare Worker) 배포 후 clientId와 proxyUrl을 채우면
+ * 일반 사용자는 별도 설정 없이 1클릭으로 Google Drive에 연결할 수 있습니다.
+ */
+export const PUBLIC_OAUTH = {
+  clientId: '',
+  proxyUrl: '',
+};
+
 export const DEFAULT_SETTINGS = {
   clientId: '',
   clientSecret: '',
@@ -26,6 +36,9 @@ export const DEFAULT_SETTINGS = {
   syncIntervalMinutes: 5,
   debounceSeconds: 5,
   syncStrategy: 'three_way_merge', // 'three_way_merge' | 'latest_wins'
+  failsafeEnabled: true,
+  failsafeMaxDeletePercent: 30,
+  failsafeMinDeleteCount: 50,
   maxBackups: 10,
   uiTheme: 'obsidian', // 'obsidian' | 'editorial' | 'promax'
 };

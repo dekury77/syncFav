@@ -31,6 +31,7 @@ const el = {
   syncIntervalMinutes: document.getElementById('syncIntervalMinutes'),
   debounceSeconds: document.getElementById('debounceSeconds'),
   autoSync: document.getElementById('autoSync'),
+  failsafeEnabled: document.getElementById('failsafeEnabled'),
   saveSyncSettingsBtn: document.getElementById('saveSyncSettingsBtn'),
 
   syncNowBtn: document.getElementById('syncNowBtn'),
@@ -152,6 +153,7 @@ async function loadDashboard() {
   el.syncIntervalMinutes.value = settings.syncIntervalMinutes ?? 5;
   el.debounceSeconds.value = settings.debounceSeconds ?? 5;
   el.autoSync.checked = Boolean(settings.autoSync);
+  el.failsafeEnabled.checked = settings.failsafeEnabled !== false;
 
   const countText = `북마크 ${Number(state.bookmarkCount || 0).toLocaleString('ko-KR')}개 · 폴더 ${Number(
     state.folderCount || 0
@@ -297,6 +299,7 @@ el.saveSyncSettingsBtn.addEventListener('click', async () => {
     syncIntervalMinutes: Math.max(1, Number(el.syncIntervalMinutes.value) || 5),
     debounceSeconds: Math.max(3, Number(el.debounceSeconds.value) || 5),
     autoSync: el.autoSync.checked,
+    failsafeEnabled: el.failsafeEnabled.checked,
   });
   if (res?.ok) {
     showToast('동기화 설정이 저장되었습니다.');

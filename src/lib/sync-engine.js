@@ -35,6 +35,35 @@ export function isSyncRunning() {
   return syncInProgress;
 }
 
+/**
+ * 대량 삭제 방지 (Failsafe) 검사
+ * 이전 북마크 수 대비 일정 비율(%) 이상이면서 최소 개수 이상 한꺼번에 삭제되려 하면 차단한다.
+ */
+export function evaluateFailsafe(beforeCount, afterCount, settings = {}) {
+  if (settings.failsafeEnabled === false) {
+    return { blocked: false };
+  }
+  if (!beforeCount || beforeCount <= 0 || afterCount >= beforeCount) {
+    return { blocked: false };
+  }
+  const deletedCount = beforeCount - afterCount;
+  const deletedPercent = (deletedCount / beforeCount) * 100;
+  const maxPercent = Number(settings.failsafeMaxDeletePercent ?? 30);
+  const minCount = Number(settings.failsafeMinDeleteCount ?? 50);
+
+  if (deletedCount >= minCount && deletedPercent >= maxPercent) {
+    return {
+      blocked: true,
+      deletedCount,
+      deletedPercent: Math.round(deletedPercent),
+      message: `대량 삭제 방지(Failsafe) 작동: 북마크 ${deletedCount}개(${Math.round(
+        deletedPercent
+      )}%)가 한꺼번에 삭제되려 해 자동 동기화를 중단했습니다. 의도한 변경이라면 설정에서 수동 덮어쓰기를 실행하세요.`,
+    };
+  }
+  return { blocked: false };
+}
+
 async function setBadge(text, color) {
   if (typeof chrome === 'undefined' || !chrome.action) return;
   try {
@@ -189,12 +218,17 @@ export async function runSync({ mode = 'smart', reason = 'manual' } = {}) {
           finalSnapshot = localSnapshot;
           await addLog('info', '이미 최신 상태입니다.', { reason });
         } else if (baseChecksum && localChecksum === baseChecksum) {
-          // 로컬 변경 없음, 원격만 변경됨 -> 원격 반영
+          // 로컬 변경 없음, 원격만 변경됨 -> 원격 반영 전 Failsafe 검사
+          const remoteStats = countStats(remoteSnapshot.roots);
+          const guard = evaluateFailsafe(localSnapshot.stats.bookmarks, remoteStats.bookmarks, settings);
+          if (guard.blocked) {
+            throw new Error(guard.message);
+          }
           appliedSummary = await applyToLocalSafely(remoteSnapshot.roots, 'before_pull');
           finalSnapshot = {
             ...remoteSnapshot,
             checksum: remoteChecksum,
-            stats: countStats(remoteSnapshot.roots),
+            stats: remoteStats,
           };
           direction = 'pull';
           await addLog(
@@ -203,7 +237,12 @@ export async function runSync({ mode = 'smart', reason = 'manual' } = {}) {
             { reason, appliedSummary }
           );
         } else if (baseChecksum && remoteChecksum === baseChecksum) {
-          // 원격 변경 없음, 로컬만 변경됨 -> 로컬 업로드
+          // 원격 변경 없음, 로컬만 변경됨 -> 원격 덮어쓰기 전 Failsafe 검사
+          const remoteStats = countStats(remoteSnapshot.roots);
+          const guard = evaluateFailsafe(remoteStats.bookmarks, localSnapshot.stats.bookmarks, settings);
+          if (guard.blocked) {
+            throw new Error(guard.message);
+          }
           const uploaded = await uploadSnapshot(
             token,
             folderId,

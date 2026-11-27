@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy — SyncFav</title>
+    <style>
+      :root {
+        --bg: #0a0b0e;
+        --surface: #111318;
+        --border: rgba(255, 255, 255, 0.09);
+        --text: #f3f4f6;
+        --muted: #9ba1ae;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+      }
+      .wrap { max-width: 740px; margin: 0 auto; padding: 48px 24px 80px; }
+      a { color: #93c5fd; }
+      h1 { font-size: 32px; letter-spacing: -0.02em; margin-bottom: 8px; }
+      .updated { color: var(--muted); font-size: 13px; margin-bottom: 32px; }
+      h2 { font-size: 18px; margin: 28px 0 10px; }
+      p, li { color: #d1d5db; font-size: 14.5px; margin-bottom: 10px; }
+      ul { padding-left: 20px; }
+      code { background: var(--surface); padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+      .back { display: inline-block; margin-bottom: 24px; font-size: 13.5px; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="index.html">← Back to SyncFav</a>
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: November 27, 2026</p>
+
+      <h2>1. Overview</h2>
+      <p>
+        SyncFav is a browser extension that synchronizes your browser bookmarks across devices using
+        your own Google Drive account. We do not operate a database storing your bookmarks, nor do we
+        sell, rent, or share any user data with third parties.
+      </p>
+
+      <h2>2. Data Accessed &amp; Stored</h2>
+      <ul>
+        <li>
+          <strong>Browser Bookmarks:</strong> Read and written locally via the browser's
+          <code>bookmarks</code> API strictly for synchronization and local backup.
+        </li>
+        <li>
+          <strong>Google Drive (<code>drive.file</code> scope):</strong> SyncFav creates and updates
+          only its own folder and file (default: <code>SyncFav/bookmarks.json</code>) in your Google
+          Drive. It cannot read, modify, or delete any other files in your Drive.
+        </li>
+        <li>
+          <strong>Google Email Address (<code>userinfo.email</code>):</strong> Displayed inside the
+          extension UI so you can verify which Google account is connected.
+        </li>
+        <li>
+          <strong>Local Storage:</strong> OAuth tokens, sync preferences, logs, and local bookmark
+          backups are stored exclusively on your device via <code>chrome.storage.local</code>.
+        </li>
+      </ul>
+
+      <h2>3. Data Transfer &amp; OAuth Proxy</h2>
+      <p>
+        Bookmark content is transmitted directly between your browser and Google Drive over HTTPS.
+        When using the public OAuth flow, only OAuth authorization codes and refresh tokens are
+        exchanged through a stateless Cloudflare Worker proxy to protect the OAuth client secret;
+        no tokens or bookmarks are logged or persisted on the proxy.
+      </p>
+
+      <h2>4. Google API Services User Data Policy</h2>
+      <p>
+        SyncFav's use and transfer of information received from Google APIs will adhere to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer">
+          Google API Services User Data Policy
+        </a>, including the Limited Use requirements.
+      </p>
+
+      <h2>5. Revoking Access &amp; Data Deletion</h2>
+      <p>
+        You can disconnect your Google account at any time from SyncFav Settings, revoke access from
+        your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">Google Account Permissions</a>
+        page, and delete the <code>SyncFav</code> folder from your Google Drive.
+      </p>
+
+      <h2>6. Contact</h2>
+      <p>
+        If you have questions about this Privacy Policy, please open an issue on the
+        <a href="https://github.com/dekury77/syncFav" target="_blank" rel="noreferrer">SyncFav GitHub repository</a>.
+      </p>
+    </div>
+  </body>
+</html>
