@@ -27,6 +27,7 @@ export const DEFAULT_SETTINGS = {
   debounceSeconds: 5,
   syncStrategy: 'three_way_merge', // 'three_way_merge' | 'latest_wins'
   maxBackups: 10,
+  uiTheme: 'obsidian', // 'obsidian' | 'editorial' | 'promax'
 };
 
 export const OAUTH_SCOPES = [

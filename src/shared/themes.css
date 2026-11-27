@@ -1,0 +1,191 @@
+/**
+ * SyncFav 3-Skin Design Token System
+ * 1) obsidian  — Linear / Raycast / macOS Native (Dark Monochrome Craft)
+ * 2) editorial — Anthropic `frontend-design` skill (Archival Linen & Cobalt Ink)
+ * 3) promax    — `ui-ux-pro-max` skill (Mint-Teal Productivity SaaS Tokens)
+ */
+
+:root,
+[data-theme='obsidian'] {
+  color-scheme: dark;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Pretendard', 'Segoe UI', sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Pretendard', 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --bg-canvas: #0a0b0e;
+  --bg-surface: #111318;
+  --bg-elevated: #171a21;
+  --bg-subtle: rgba(255, 255, 255, 0.035);
+  --bg-hover: rgba(255, 255, 255, 0.065);
+  --bg-input: #0d0f13;
+
+  --border-hairline: rgba(255, 255, 255, 0.085);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-focus: rgba(255, 255, 255, 0.42);
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ba1ae;
+  --text-muted: #6b7280;
+
+  --accent-bg: #f3f4f6;
+  --accent-bg-hover: #ffffff;
+  --accent-fg: #0a0b0e;
+  --accent-soft: rgba(255, 255, 255, 0.08);
+  --accent-link: #cbd5e1;
+
+  --status-ok: #34d399;
+  --status-ok-bg: rgba(52, 211, 153, 0.12);
+  --status-ok-border: rgba(52, 211, 153, 0.28);
+  --status-sync: #60a5fa;
+  --status-sync-bg: rgba(96, 165, 250, 0.14);
+  --status-err: #f87171;
+  --status-err-bg: rgba(248, 113, 113, 0.12);
+  --status-err-border: rgba(248, 113, 113, 0.3);
+
+  --danger-bg: rgba(239, 68, 68, 0.14);
+  --danger-bg-hover: rgba(239, 68, 68, 0.24);
+  --danger-fg: #fca5a5;
+  --danger-border: rgba(239, 68, 68, 0.32);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --logo-bg: #181b22;
+  --logo-fg: #f3f4f6;
+  --logo-border: rgba(255, 255, 255, 0.14);
+}
+
+/* Skin 2: Anthropic frontend-design — Archival Linen & Cobalt Ink */
+[data-theme='editorial'] {
+  color-scheme: light;
+  --font-display: 'Iowan Old Style', 'AppleMyungjo', Georgia, 'Times New Roman', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --bg-canvas: #f6f7f4;
+  --bg-surface: #ffffff;
+  --bg-elevated: #eff1ec;
+  --bg-subtle: #f1f3ee;
+  --bg-hover: #e7ebe3;
+  --bg-input: #ffffff;
+
+  --border-hairline: #dde2da;
+  --border-strong: #c2cbd6;
+  --border-focus: #1e40af;
+
+  --text-primary: #14191f;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --accent-bg: #1e40af;
+  --accent-bg-hover: #1e3a8a;
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(30, 64, 175, 0.08);
+  --accent-link: #1e40af;
+
+  --status-ok: #15803d;
+  --status-ok-bg: #ecfdf3;
+  --status-ok-border: #bbf7d0;
+  --status-sync: #1e40af;
+  --status-sync-bg: #eff6ff;
+  --status-err: #b91c1c;
+  --status-err-bg: #fef2f2;
+  --status-err-border: #fecaca;
+
+  --danger-bg: #fef2f2;
+  --danger-bg-hover: #fee2e2;
+  --danger-fg: #b91c1c;
+  --danger-border: #fecaca;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --shadow-card: 0 1px 0 rgba(20, 25, 31, 0.04);
+  --shadow-pop: 0 10px 26px rgba(20, 25, 31, 0.12);
+
+  --logo-bg: #1e40af;
+  --logo-fg: #ffffff;
+  --logo-border: #1e40af;
+}
+
+/* Skin 3: ui-ux-pro-max — Auto-generated Mint-Teal Productivity SaaS Tokens */
+[data-theme='promax'] {
+  color-scheme: light;
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+  --font-mono: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --bg-canvas: #f0fdfa;
+  --bg-surface: #ffffff;
+  --bg-elevated: #e8f5f3;
+  --bg-subtle: #f5fcfb;
+  --bg-hover: #e2f5f2;
+  --bg-input: #ffffff;
+
+  --border-hairline: #cceee8;
+  --border-strong: #99f6e4;
+  --border-focus: #0d9488;
+
+  --text-primary: #134e4a;
+  --text-secondary: #3f6a67;
+  --text-muted: #5b7c79;
+
+  --accent-bg: #0d9488;
+  --accent-bg-hover: #0f766e;
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(13, 148, 136, 0.1);
+  --accent-link: #0d9488;
+
+  --status-ok: #0d9488;
+  --status-ok-bg: #ccfbf1;
+  --status-ok-border: #99f6e4;
+  --status-sync: #ea580c;
+  --status-sync-bg: #ffedd5;
+  --status-err: #dc2626;
+  --status-err-bg: #fef2f2;
+  --status-err-border: #fecaca;
+
+  --danger-bg: #fef2f2;
+  --danger-bg-hover: #fee2e2;
+  --danger-fg: #dc2626;
+  --danger-border: #fecaca;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-card: 0 2px 10px rgba(13, 148, 136, 0.06), 0 1px 2px rgba(19, 78, 74, 0.04);
+  --shadow-pop: 0 12px 28px rgba(19, 78, 74, 0.14);
+
+  --logo-bg: #0d9488;
+  --logo-fg: #ffffff;
+  --logo-border: #14b8a6;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visibility */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.is-spinning svg {
+  animation: spin 0.9s linear infinite;
+}

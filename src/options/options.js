@@ -1,10 +1,19 @@
+import { SKINS, applyTheme } from '../shared/theme-manager.js';
+
 function sendMsg(type, payload = {}) {
   return chrome.runtime.sendMessage({ type, payload });
 }
 
 const el = {
   connectionPill: document.getElementById('connectionPill'),
+  connectionLabel: document.getElementById('connectionLabel'),
+  sidebarSummary: document.getElementById('sidebarSummary'),
   toast: document.getElementById('toast'),
+  navItems: [...document.querySelectorAll('.nav-item')],
+  panels: [...document.querySelectorAll('.panel')],
+  quickSkinBtns: [...document.querySelectorAll('.quick-skin-btn')],
+  skinCardsGrid: document.getElementById('skinCardsGrid'),
+
   redirectUri: document.getElementById('redirectUri'),
   copyRedirectBtn: document.getElementById('copyRedirectBtn'),
   clientId: document.getElementById('clientId'),
@@ -35,20 +44,19 @@ const el = {
   clearLogsBtn: document.getElementById('clearLogsBtn'),
 };
 
+let currentTheme = 'obsidian';
 let toastTimer = null;
+
 function showToast(message, isError = false) {
   el.toast.textContent = message;
   el.toast.classList.toggle('error', isError);
   el.toast.classList.remove('hidden');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.toast.classList.add('hidden'), 3500);
+  toastTimer = setTimeout(() => el.toast.classList.add('hidden'), 3200);
 }
 
 function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function formatDateTime(iso) {
@@ -56,6 +64,69 @@ function formatDateTime(iso) {
   return new Date(iso).toLocaleString('ko-KR');
 }
 
+// --- Tab Navigation ---
+function switchTab(tabId) {
+  el.navItems.forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === tabId));
+  el.panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === tabId));
+}
+
+el.navItems.forEach((btn) => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// --- Skin System ---
+function syncSkinUI(themeId) {
+  currentTheme = applyTheme(themeId);
+  el.quickSkinBtns.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.skin === currentTheme);
+  });
+  renderSkinCards();
+}
+
+async function selectSkin(themeId) {
+  syncSkinUI(themeId);
+  await sendMsg('UPDATE_SETTINGS', { uiTheme: themeId });
+  const skinMeta = SKINS.find((s) => s.id === themeId);
+  showToast(`${skinMeta?.name || themeId} 스킨이 적용되었습니다.`);
+}
+
+el.quickSkinBtns.forEach((btn) => {
+  btn.addEventListener('click', () => selectSkin(btn.dataset.skin));
+});
+
+function renderSkinCards() {
+  el.skinCardsGrid.innerHTML = SKINS.map((skin) => {
+    const [bg, surface, accent, status] = skin.swatches;
+    const isSelected = skin.id === currentTheme;
+    return `
+      <button type="button" class="skin-card ${isSelected ? 'selected' : ''}" data-skin-card="${skin.id}">
+        <div class="skin-preview-box" style="background:${bg};">
+          <div class="preview-bar">
+            <div class="preview-dots">
+              ${skin.swatches.map((c) => `<span class="preview-swatch" style="background:${c};"></span>`).join('')}
+            </div>
+            <span class="preview-pill" style="background:${accent};"></span>
+          </div>
+          <div class="preview-lines">
+            <span class="preview-line" style="width:72%;background:${status};"></span>
+            <span class="preview-line" style="width:48%;background:${surface};"></span>
+          </div>
+        </div>
+        <div class="skin-card-head">
+          <span class="skin-card-name">${escapeHtml(skin.name)}</span>
+          <span class="skin-card-tag">${escapeHtml(skin.tag)}</span>
+        </div>
+        <p class="skin-card-desc">${escapeHtml(skin.description)}</p>
+      </button>
+    `;
+  }).join('');
+
+  el.skinCardsGrid.querySelectorAll('[data-skin-card]').forEach((card) => {
+    card.addEventListener('click', () => selectSkin(card.dataset.skinCard));
+  });
+}
+
+// --- Dashboard Data ---
 async function loadDashboard() {
   const data = await sendMsg('GET_DASHBOARD_DATA');
   if (!data?.ok) {
@@ -64,6 +135,7 @@ async function loadDashboard() {
   }
 
   const { redirectUri, settings, auth, state, backups, logs } = data;
+  syncSkinUI(settings.uiTheme || 'obsidian');
 
   el.redirectUri.value = redirectUri || '';
   el.clientId.value = settings.clientId || '';
@@ -77,25 +149,31 @@ async function loadDashboard() {
   el.debounceSeconds.value = settings.debounceSeconds ?? 5;
   el.autoSync.checked = Boolean(settings.autoSync);
 
+  const countText = `북마크 ${Number(state.bookmarkCount || 0).toLocaleString('ko-KR')}개 · 폴더 ${Number(
+    state.folderCount || 0
+  ).toLocaleString('ko-KR')}개`;
+
   if (auth.connected) {
-    el.connectionPill.textContent = `연결됨 (${auth.email || 'Google'})`;
-    el.connectionPill.className = 'pill pill-on';
+    el.connectionLabel.textContent = '연결됨';
+    el.connectionPill.className = 'status-pill status-ok';
+    el.sidebarSummary.textContent = `${auth.email || 'Google'}\n${countText}`;
     el.connectBtn.textContent = '계정 다시 연결';
     el.disconnectBtn.classList.remove('hidden');
 
     const tokenMode = auth.hasRefreshToken
       ? '자동 갱신 활성화 (Refresh Token)'
-      : '단기 토큰 모드 (Client Secret 입력 시 무제한 자동 갱신)';
+      : '단기 토큰 모드';
     el.connectedInfo.innerHTML = `
-      <strong>연결 계정:</strong> ${escapeHtml(auth.email || '알 수 없음')} &nbsp;|&nbsp;
-      <strong>저장 위치:</strong> Google Drive / ${escapeHtml(settings.driveFolderName)} / ${escapeHtml(settings.driveFileName)}<br/>
-      <strong>토큰 상태:</strong> ${tokenMode} &nbsp;|&nbsp;
-      <strong>현재 북마크:</strong> ${state.bookmarkCount}개 (폴더 ${state.folderCount}개)
+      <div><strong>${escapeHtml(auth.email || 'Google 계정')}</strong> 연결됨 · ${tokenMode}</div>
+      <div class="data-meta">Google Drive / ${escapeHtml(settings.driveFolderName)} / ${escapeHtml(
+      settings.driveFileName
+    )} (${countText})</div>
     `;
     el.connectedInfo.classList.remove('hidden');
   } else {
-    el.connectionPill.textContent = '미연결';
-    el.connectionPill.className = 'pill pill-off';
+    el.connectionLabel.textContent = '미연결';
+    el.connectionPill.className = 'status-pill status-idle';
+    el.sidebarSummary.textContent = countText;
     el.connectBtn.textContent = 'Google Drive 연결';
     el.disconnectBtn.classList.add('hidden');
     el.connectedInfo.classList.add('hidden');
@@ -107,17 +185,19 @@ async function loadDashboard() {
 
 function renderBackups(backups) {
   if (backups.length === 0) {
-    el.backupList.innerHTML = '<div class="muted">아직 생성된 로컬 백업이 없습니다.</div>';
+    el.backupList.innerHTML = '<div class="empty-state">아직 생성된 로컬 백업이 없습니다.</div>';
     return;
   }
 
   el.backupList.innerHTML = backups
     .map(
       (b) => `
-      <div class="list-item">
+      <div class="data-row">
         <div>
           <strong>${formatDateTime(b.createdAt)}</strong>
-          <span class="muted"> — ${escapeHtml(b.reason)} (북마크 ${b.stats?.bookmarks ?? '?'}개)</span>
+          <div class="data-meta">${escapeHtml(b.reason)} · 북마크 ${Number(
+        b.stats?.bookmarks ?? 0
+      ).toLocaleString('ko-KR')}개</div>
         </div>
         <button type="button" class="btn btn-secondary btn-sm restore-btn" data-id="${escapeHtml(b.id)}">
           복원
@@ -142,16 +222,16 @@ function renderBackups(backups) {
 
 function renderLogs(logs) {
   if (logs.length === 0) {
-    el.logList.innerHTML = '<div class="muted">기록된 로그가 없습니다.</div>';
+    el.logList.innerHTML = '<div class="empty-state">기록된 동기화 로그가 없습니다.</div>';
     return;
   }
 
   el.logList.innerHTML = logs
     .map(
       (log) => `
-      <div class="log-row ${escapeHtml(log.level)}">
+      <div class="data-row ${log.level === 'error' ? 'error' : ''}">
         <span>${escapeHtml(log.message)}</span>
-        <span class="muted">${formatDateTime(log.timestamp)}</span>
+        <span class="data-meta">${formatDateTime(log.timestamp)}</span>
       </div>`
     )
     .join('');
@@ -160,7 +240,7 @@ function renderLogs(logs) {
 // --- Event Handlers ---
 el.copyRedirectBtn.addEventListener('click', async () => {
   await navigator.clipboard.writeText(el.redirectUri.value);
-  showToast('Redirect URI가 클립보드에 복사되었습니다.');
+  showToast('Redirect URI가 복사되었습니다.');
 });
 
 el.saveOAuthBtn.addEventListener('click', async () => {
@@ -194,18 +274,13 @@ el.connectBtn.addEventListener('click', async () => {
     driveFileName: el.driveFileName.value.trim() || 'bookmarks.json',
   });
   el.connectBtn.disabled = false;
-  if (res?.ok) {
-    showToast('Google Drive 연결 및 초기 동기화가 완료되었습니다!');
-  } else {
-    showToast(res?.error || '연결 실패', true);
-  }
+  if (res?.ok) showToast('Google Drive 연결 및 동기화가 완료되었습니다.');
+  else showToast(res?.error || '연결 실패', true);
   await loadDashboard();
 });
 
 el.disconnectBtn.addEventListener('click', async () => {
-  if (!confirm('Google Drive 연결을 해제할까요? (로컬 북마크와 드라이브 파일은 삭제되지 않습니다)')) {
-    return;
-  }
+  if (!confirm('Google Drive 연결을 해제할까요? (로컬 북마크와 Drive 파일은 유지됩니다)')) return;
   await sendMsg('SIGN_OUT');
   showToast('연결이 해제되었습니다.');
   await loadDashboard();
@@ -256,10 +331,7 @@ el.forcePullBtn.addEventListener('click', async () => {
 
 el.exportJsonBtn.addEventListener('click', async () => {
   const res = await sendMsg('EXPORT_LOCAL');
-  if (!res?.ok) {
-    showToast('내보내기 실패', true);
-    return;
-  }
+  if (!res?.ok) return showToast('내보내기 실패', true);
   const blob = new Blob([JSON.stringify(res.snapshot, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -276,8 +348,7 @@ el.importFileInput.addEventListener('change', async (event) => {
   const file = event.target.files?.[0];
   if (!file) return;
   try {
-    const text = await file.text();
-    const json = JSON.parse(text);
+    const json = JSON.parse(await file.text());
     if (!json.roots) throw new Error('roots 필드가 없는 잘못된 파일입니다.');
     if (!confirm('선택한 JSON 파일의 북마크로 현재 브라우저를 복원할까요?')) return;
     const res = await sendMsg('IMPORT_JSON', { roots: json.roots });
