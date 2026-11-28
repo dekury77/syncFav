@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "FavoSync - Sincronización de marcadores"
+  },
+  "extDescription": {
+    "message": "Sincroniza automáticamente tus marcadores entre Ego Lite, Chrome, Edge y Brave usando tu propio Google Drive."
+  },
+  "actionTitle": {
+    "message": "FavoSync - Sincronizar marcadores"
+  }
+}

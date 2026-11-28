@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "FavoSync - クロスブラウザ ブックマーク同期"
+  },
+  "extDescription": {
+    "message": "Google Driveを使ってEgo Lite、Chrome、Edge、Brave間でブックマークを自動同期します。"
+  },
+  "actionTitle": {
+    "message": "FavoSync - ブックマーク同期"
+  }
+}

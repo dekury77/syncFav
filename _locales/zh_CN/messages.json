@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "FavoSync - 跨浏览器书签同步"
+  },
+  "extDescription": {
+    "message": "通过您自己的 Google Drive 在 Ego Lite、Chrome、Edge、Brave 等浏览器之间自动同步书签。"
+  },
+  "actionTitle": {
+    "message": "FavoSync - 书签同步"
+  }
+}

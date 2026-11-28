@@ -7,29 +7,31 @@ import {
   resolveLanguage,
 } from '../src/shared/i18n.js';
 
-test('시스템 언어 감지: ko-KR -> ko, en-US / ja-JP -> en', () => {
+test('시스템 언어 감지: ko / ja / zh / es / 기타 -> en', () => {
   assert.equal(detectSystemLanguage('ko-KR'), 'ko');
-  assert.equal(detectSystemLanguage('ko'), 'ko');
+  assert.equal(detectSystemLanguage('ja-JP'), 'ja');
+  assert.equal(detectSystemLanguage('zh-CN'), 'zh_CN');
+  assert.equal(detectSystemLanguage('es-ES'), 'es');
   assert.equal(detectSystemLanguage('en-US'), 'en');
-  assert.equal(detectSystemLanguage('ja-JP'), 'en');
+  assert.equal(detectSystemLanguage('fr-FR'), 'en');
 });
 
 test('resolveLanguage: auto면 시스템 언어, 명시 선택 시 해당 언어 우선', () => {
   assert.equal(resolveLanguage('auto', 'ko-KR'), 'ko');
-  assert.equal(resolveLanguage('auto', 'en-US'), 'en');
+  assert.equal(resolveLanguage('auto', 'ja-JP'), 'ja');
   assert.equal(resolveLanguage('en', 'ko-KR'), 'en');
-  assert.equal(resolveLanguage('ko', 'en-US'), 'ko');
+  assert.equal(resolveLanguage('es', 'en-US'), 'es');
 });
 
-test('ko와 en 번역 키 세트가 완전히 일치한다', () => {
-  const koKeys = Object.keys(MESSAGES.ko).sort();
-  const enKeys = Object.keys(MESSAGES.en).sort();
-  assert.deepEqual(koKeys, enKeys);
+test('5개 언어(en, ko, ja, zh_CN, es) 번역 키 세트가 완전히 일치한다', () => {
+  const baseKeys = Object.keys(MESSAGES.en).sort();
+  for (const lang of ['ko', 'ja', 'zh_CN', 'es']) {
+    assert.deepEqual(Object.keys(MESSAGES[lang]).sort(), baseKeys, `Mismatch in ${lang}`);
+  }
 });
 
 test('createTranslator: 변수 치환이 정상 동작한다', () => {
-  const tKo = createTranslator('ko');
-  const tEn = createTranslator('en');
-  assert.equal(tKo('foldersCount', { count: 280 }), '폴더 280개');
-  assert.equal(tEn('foldersCount', { count: 280 }), '280 folders');
+  assert.equal(createTranslator('ko')('foldersCount', { count: 280 }), '폴더 280개');
+  assert.equal(createTranslator('en')('foldersCount', { count: 280 }), '280 folders');
+  assert.equal(createTranslator('ja')('foldersCount', { count: 280 }), 'フォルダ 280件');
 });
