@@ -41,6 +41,7 @@ export const DEFAULT_SETTINGS = {
   failsafeMinDeleteCount: 50,
   maxBackups: 10,
   uiTheme: 'obsidian', // 'obsidian' | 'editorial' | 'promax'
+  uiLanguage: 'auto', // 'auto' | 'ko' | 'en'
 };
 
 export const OAUTH_SCOPES = [

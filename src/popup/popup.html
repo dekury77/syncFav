@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-theme="obsidian">
+<html lang="en" data-theme="obsidian">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,12 +16,12 @@
         </div>
 
         <div class="topbar-controls">
-          <div class="skin-pills" role="group" aria-label="스킨 전환">
-            <button type="button" class="skin-pill" data-skin="obsidian" title="Obsidian (Linear 감성)">Obs</button>
-            <button type="button" class="skin-pill" data-skin="editorial" title="Editorial (frontend-design)">Edt</button>
-            <button type="button" class="skin-pill" data-skin="promax" title="Pro Max (ui-ux-pro-max)">Pro</button>
+          <div class="skin-pills" role="group" aria-label="Switch skin">
+            <button type="button" class="skin-pill" data-skin="obsidian" title="Obsidian">Obs</button>
+            <button type="button" class="skin-pill" data-skin="editorial" title="Editorial">Edt</button>
+            <button type="button" class="skin-pill" data-skin="promax" title="Pro Max">Pro</button>
           </div>
-          <button id="openOptionsBtn" class="icon-btn" title="전체 설정 열기" aria-label="전체 설정 열기">
+          <button id="openOptionsBtn" class="icon-btn" data-i18n-title="openSettings" title="Open Settings" aria-label="Open Settings">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -34,7 +34,7 @@
         <div class="hero-status-row">
           <span id="statusBadge" class="status-pill status-idle">
             <span class="status-dot"></span>
-            <span id="statusLabel">확인 중</span>
+            <span id="statusLabel" data-i18n="statusChecking">Checking</span>
           </span>
           <span id="lastSyncText" class="meta-time">-</span>
         </div>
@@ -42,12 +42,12 @@
         <div class="hero-metric">
           <div class="metric-main">
             <span id="bookmarkCount" class="metric-number">0</span>
-            <span class="metric-unit">개의 북마크</span>
+            <span class="metric-unit" data-i18n="bookmarksUnit">bookmarks</span>
           </div>
           <div class="metric-sub">
-            <span id="folderCountText">폴더 0개</span>
+            <span id="folderCountText">0 folders</span>
             <span class="sep"></span>
-            <span id="autoSyncLabel">자동 5분</span>
+            <span id="autoSyncLabel">Auto 5m</span>
           </div>
         </div>
 
@@ -55,7 +55,7 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
           </svg>
-          <span id="accountEmail" class="account-email">Google Drive 미연결</span>
+          <span id="accountEmail" class="account-email" data-i18n="driveDisconnected">Google Drive not connected</span>
           <span id="drivePath" class="drive-path"></span>
         </div>
 
@@ -63,8 +63,8 @@
       </section>
 
       <section id="disconnectedCta" class="cta-panel hidden">
-        <p class="cta-copy">Google Drive를 연결하면 Ego Lite와 Chrome의 즐겨찾기가 자동으로 동기화됩니다.</p>
-        <button id="setupBtn" class="btn btn-primary btn-full">Google Drive 설정 열기</button>
+        <p class="cta-copy" data-i18n="ctaCopy">Connect Google Drive to automatically sync bookmarks across Ego Lite and Chrome.</p>
+        <button id="setupBtn" class="btn btn-primary btn-full" data-i18n="openDriveSetup">Open Google Drive Setup</button>
       </section>
 
       <section id="actionsSection" class="actions-panel hidden">
@@ -74,35 +74,35 @@
             <polyline points="1 20 1 14 7 14" />
             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
           </svg>
-          <span id="syncBtnLabel">지금 동기화</span>
+          <span id="syncBtnLabel" data-i18n="syncNow">Sync Now</span>
         </button>
         <div class="secondary-row">
-          <button id="pushBtn" class="btn btn-ghost" title="내 브라우저 북마크로 Google Drive를 덮어씁니다">
+          <button id="pushBtn" class="btn btn-ghost" data-i18n-title="overwriteDriveTitle">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
-            <span>Drive 덮어쓰기</span>
+            <span data-i18n="overwriteDrive">Push to Drive</span>
           </button>
-          <button id="pullBtn" class="btn btn-ghost" title="Google Drive 북마크로 내 브라우저를 덮어씁니다">
+          <button id="pullBtn" class="btn btn-ghost" data-i18n-title="overwriteLocalTitle">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            <span>로컬 덮어쓰기</span>
+            <span data-i18n="overwriteLocal">Pull to Local</span>
           </button>
         </div>
       </section>
 
       <section class="activity-panel">
         <div class="activity-header">
-          <span class="activity-title">최근 활동</span>
-          <button id="moreOptionsLink" class="text-link">설정 및 백업</button>
+          <span class="activity-title" data-i18n="recentActivity">Recent Activity</span>
+          <button id="moreOptionsLink" class="text-link" data-i18n="settingsAndBackup">Settings &amp; Backups</button>
         </div>
         <ul id="recentLogs" class="activity-list">
-          <li class="activity-empty">아직 동기화 기록이 없습니다.</li>
+          <li class="activity-empty" data-i18n="noSyncHistory">No sync history yet.</li>
         </ul>
       </section>
     </div>

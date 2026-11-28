@@ -1,3 +1,4 @@
+import { applyI18nToDom, resolveLanguage } from '../shared/i18n.js';
 import { SKINS, applyTheme } from '../shared/theme-manager.js';
 
 function sendMsg(type, payload = {}) {
@@ -14,6 +15,7 @@ const el = {
   panels: [...document.querySelectorAll('.panel')],
   quickSkinBtns: [...document.querySelectorAll('.quick-skin-btn')],
   skinCardsGrid: document.getElementById('skinCardsGrid'),
+  uiLanguage: document.getElementById('uiLanguage'),
 
   redirectUri: document.getElementById('redirectUri'),
   copyRedirectBtn: document.getElementById('copyRedirectBtn'),
@@ -47,6 +49,8 @@ const el = {
 };
 
 let currentTheme = 'obsidian';
+let currentLang = resolveLanguage('auto');
+let t = applyI18nToDom(currentLang);
 let toastTimer = null;
 
 function showToast(message, isError = false) {
@@ -63,7 +67,7 @@ function escapeHtml(str) {
 
 function formatDateTime(iso) {
   if (!iso) return '-';
-  return new Date(iso).toLocaleString('ko-KR');
+  return new Date(iso).toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US');
 }
 
 // --- Tab Navigation ---
@@ -74,6 +78,23 @@ function switchTab(tabId) {
 
 el.navItems.forEach((btn) => {
   btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// --- Language System ---
+function syncLanguageUI(settingLang) {
+  currentLang = resolveLanguage(settingLang || 'auto');
+  t = applyI18nToDom(currentLang);
+  document.title = t('settingsTitle');
+  if (el.uiLanguage) {
+    el.uiLanguage.value = settingLang || 'auto';
+  }
+}
+
+el.uiLanguage.addEventListener('change', async () => {
+  const chosen = el.uiLanguage.value;
+  await sendMsg('UPDATE_SETTINGS', { uiLanguage: chosen });
+  await loadDashboard();
+  showToast(t('toastLangApplied'));
 });
 
 // --- Skin System ---
@@ -89,12 +110,19 @@ async function selectSkin(themeId) {
   syncSkinUI(themeId);
   await sendMsg('UPDATE_SETTINGS', { uiTheme: themeId });
   const skinMeta = SKINS.find((s) => s.id === themeId);
-  showToast(`${skinMeta?.name || themeId} 스킨이 적용되었습니다.`);
+  showToast(t('toastSkinApplied', { name: skinMeta?.name || themeId }));
 }
 
 el.quickSkinBtns.forEach((btn) => {
   btn.addEventListener('click', () => selectSkin(btn.dataset.skin));
 });
+
+function getSkinDesc(skinId) {
+  if (skinId === 'obsidian') return t('skinObsidianDesc');
+  if (skinId === 'editorial') return t('skinEditorialDesc');
+  if (skinId === 'promax') return t('skinPromaxDesc');
+  return '';
+}
 
 function renderSkinCards() {
   el.skinCardsGrid.innerHTML = SKINS.map((skin) => {
@@ -118,7 +146,7 @@ function renderSkinCards() {
           <span class="skin-card-name">${escapeHtml(skin.name)}</span>
           <span class="skin-card-tag">${escapeHtml(skin.tag)}</span>
         </div>
-        <p class="skin-card-desc">${escapeHtml(skin.description)}</p>
+        <p class="skin-card-desc">${escapeHtml(getSkinDesc(skin.id))}</p>
       </button>
     `;
   }).join('');
@@ -135,11 +163,12 @@ async function loadDashboard() {
   }
   const data = await sendMsg('GET_DASHBOARD_DATA');
   if (!data?.ok) {
-    showToast(data?.error || '상태를 불러오지 못했습니다.', true);
+    showToast(data?.error || t('errLoadFailed'), true);
     return;
   }
 
   const { redirectUri, settings, auth, state, backups, logs } = data;
+  syncLanguageUI(settings.uiLanguage || 'auto');
   syncSkinUI(settings.uiTheme || 'obsidian');
 
   el.redirectUri.value = redirectUri || '';
@@ -155,32 +184,32 @@ async function loadDashboard() {
   el.autoSync.checked = Boolean(settings.autoSync);
   el.failsafeEnabled.checked = settings.failsafeEnabled !== false;
 
-  const countText = `북마크 ${Number(state.bookmarkCount || 0).toLocaleString('ko-KR')}개 · 폴더 ${Number(
-    state.folderCount || 0
-  ).toLocaleString('ko-KR')}개`;
+  const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
+  const countText = t('summaryCounts', {
+    bookmarks: Number(state.bookmarkCount || 0).toLocaleString(locale),
+    folders: Number(state.folderCount || 0).toLocaleString(locale),
+  });
 
   if (auth.connected) {
-    el.connectionLabel.textContent = '연결됨';
+    el.connectionLabel.textContent = t('statusConnected');
     el.connectionPill.className = 'status-pill status-ok';
     el.sidebarSummary.textContent = `${auth.email || 'Google'}\n${countText}`;
-    el.connectBtn.textContent = '계정 다시 연결';
+    el.connectBtn.textContent = t('reconnectAccount');
     el.disconnectBtn.classList.remove('hidden');
 
-    const tokenMode = auth.hasRefreshToken
-      ? '자동 갱신 활성화 (Refresh Token)'
-      : '단기 토큰 모드';
+    const tokenMode = auth.hasRefreshToken ? t('tokenAutoRefresh') : t('tokenShortTerm');
     el.connectedInfo.innerHTML = `
-      <div><strong>${escapeHtml(auth.email || 'Google 계정')}</strong> 연결됨 · ${tokenMode}</div>
+      <div><strong>${escapeHtml(auth.email || 'Google')}</strong> · ${escapeHtml(tokenMode)}</div>
       <div class="data-meta">Google Drive / ${escapeHtml(settings.driveFolderName)} / ${escapeHtml(
       settings.driveFileName
-    )} (${countText})</div>
+    )} (${escapeHtml(countText)})</div>
     `;
     el.connectedInfo.classList.remove('hidden');
   } else {
-    el.connectionLabel.textContent = '미연결';
+    el.connectionLabel.textContent = t('statusDisconnected');
     el.connectionPill.className = 'status-pill status-idle';
     el.sidebarSummary.textContent = countText;
-    el.connectBtn.textContent = 'Google Drive 연결';
+    el.connectBtn.textContent = t('connectDrive');
     el.disconnectBtn.classList.add('hidden');
     el.connectedInfo.classList.add('hidden');
   }
@@ -191,22 +220,26 @@ async function loadDashboard() {
 
 function renderBackups(backups) {
   if (backups.length === 0) {
-    el.backupList.innerHTML = '<div class="empty-state">아직 생성된 로컬 백업이 없습니다.</div>';
+    el.backupList.innerHTML = `<div class="empty-state">${escapeHtml(t('noBackups'))}</div>`;
     return;
   }
 
+  const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
   el.backupList.innerHTML = backups
     .map(
       (b) => `
       <div class="data-row">
         <div>
           <strong>${formatDateTime(b.createdAt)}</strong>
-          <div class="data-meta">${escapeHtml(b.reason)} · 북마크 ${Number(
-        b.stats?.bookmarks ?? 0
-      ).toLocaleString('ko-KR')}개</div>
+          <div class="data-meta">${escapeHtml(
+            t('backupMeta', {
+              reason: b.reason,
+              count: Number(b.stats?.bookmarks ?? 0).toLocaleString(locale),
+            })
+          )}</div>
         </div>
         <button type="button" class="btn btn-secondary btn-sm restore-btn" data-id="${escapeHtml(b.id)}">
-          복원
+          ${escapeHtml(t('restoreBtn'))}
         </button>
       </div>`
     )
@@ -214,13 +247,13 @@ function renderBackups(backups) {
 
   el.backupList.querySelectorAll('.restore-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
-      if (!confirm('이 시점의 백업으로 현재 브라우저 북마크를 복원할까요?')) return;
+      if (!confirm(t('confirmRestore'))) return;
       const res = await sendMsg('RESTORE_BACKUP', { backupId: btn.dataset.id });
       if (res?.ok) {
-        showToast('백업이 복원되었습니다.');
+        showToast(t('toastRestoreDone'));
         await loadDashboard();
       } else {
-        showToast(res?.error || '복원 실패', true);
+        showToast(res?.error || t('errRestoreFailed'), true);
       }
     });
   });
@@ -228,7 +261,7 @@ function renderBackups(backups) {
 
 function renderLogs(logs) {
   if (logs.length === 0) {
-    el.logList.innerHTML = '<div class="empty-state">기록된 동기화 로그가 없습니다.</div>';
+    el.logList.innerHTML = `<div class="empty-state">${escapeHtml(t('noLogs'))}</div>`;
     return;
   }
 
@@ -246,7 +279,7 @@ function renderLogs(logs) {
 // --- Event Handlers ---
 el.copyRedirectBtn.addEventListener('click', async () => {
   await navigator.clipboard.writeText(el.redirectUri.value);
-  showToast('Redirect URI가 복사되었습니다.');
+  showToast(t('toastCopied'));
 });
 
 el.saveOAuthBtn.addEventListener('click', async () => {
@@ -257,10 +290,10 @@ el.saveOAuthBtn.addEventListener('click', async () => {
     driveFileName: el.driveFileName.value.trim() || 'bookmarks.json',
   });
   if (res?.ok) {
-    showToast('OAuth 및 Drive 경로 설정이 저장되었습니다.');
+    showToast(t('toastOAuthSaved'));
     await loadDashboard();
   } else {
-    showToast(res?.error || '저장 실패', true);
+    showToast(res?.error || t('errSaveFailed'), true);
   }
 });
 
@@ -268,7 +301,7 @@ el.connectBtn.addEventListener('click', async () => {
   const clientId = el.clientId.value.trim();
   const clientSecret = el.clientSecret.value.trim();
   el.connectBtn.disabled = true;
-  el.connectBtn.textContent = '연결 중...';
+  el.connectBtn.textContent = t('connectingBtn');
   const res = await sendMsg('SIGN_IN', {
     clientId,
     clientSecret,
@@ -276,15 +309,15 @@ el.connectBtn.addEventListener('click', async () => {
     driveFileName: el.driveFileName.value.trim() || 'bookmarks.json',
   });
   el.connectBtn.disabled = false;
-  if (res?.ok) showToast('Google Drive 연결 및 동기화가 완료되었습니다.');
-  else showToast(res?.error || '연결 실패', true);
+  if (res?.ok) showToast(t('toastConnected'));
+  else showToast(res?.error || t('errConnectFailed'), true);
   await loadDashboard();
 });
 
 el.disconnectBtn.addEventListener('click', async () => {
-  if (!confirm('Google Drive 연결을 해제할까요? (로컬 북마크와 Drive 파일은 유지됩니다)')) return;
+  if (!confirm(t('confirmDisconnect'))) return;
   await sendMsg('SIGN_OUT');
-  showToast('연결이 해제되었습니다.');
+  showToast(t('toastDisconnected'));
   await loadDashboard();
 });
 
@@ -298,10 +331,10 @@ el.saveSyncSettingsBtn.addEventListener('click', async () => {
     failsafeEnabled: el.failsafeEnabled.checked,
   });
   if (res?.ok) {
-    showToast('동기화 설정이 저장되었습니다.');
+    showToast(t('toastSyncSaved'));
     await loadDashboard();
   } else {
-    showToast(res?.error || '저장 실패', true);
+    showToast(res?.error || t('errSaveFailed'), true);
   }
 });
 
@@ -309,40 +342,38 @@ el.syncNowBtn.addEventListener('click', async () => {
   el.syncNowBtn.disabled = true;
   const res = await sendMsg('SYNC_NOW');
   el.syncNowBtn.disabled = false;
-  if (res?.ok) showToast(`동기화 완료 (${res.direction})`);
-  else showToast(res?.error || res?.message || '동기화 실패', true);
+  if (res?.ok) showToast(t('toastSyncDone', { direction: res.direction }));
+  else showToast(res?.error || res?.message || t('errSyncFailed'), true);
   await loadDashboard();
 });
 
 el.forcePushBtn.addEventListener('click', async () => {
-  if (!confirm('현재 브라우저 북마크로 Google Drive 파일을 덮어쓸까요?')) return;
+  if (!confirm(t('confirmPush'))) return;
   const res = await sendMsg('FORCE_PUSH');
-  if (res?.ok) showToast('Google Drive로 강제 업로드 완료');
-  else showToast(res?.error || '업로드 실패', true);
+  if (res?.ok) showToast(t('toastPushDone'));
+  else showToast(res?.error || t('errPushFailed'), true);
   await loadDashboard();
 });
 
 el.forcePullBtn.addEventListener('click', async () => {
-  if (!confirm('Google Drive 북마크로 현재 브라우저를 덮어쓸까요? (현재 북마크는 자동 백업됩니다)')) {
-    return;
-  }
+  if (!confirm(t('confirmPull'))) return;
   const res = await sendMsg('FORCE_PULL');
-  if (res?.ok) showToast('Google Drive에서 강제 다운로드 완료');
-  else showToast(res?.error || '다운로드 실패', true);
+  if (res?.ok) showToast(t('toastPullDone'));
+  else showToast(res?.error || t('errPullFailed'), true);
   await loadDashboard();
 });
 
 el.exportJsonBtn.addEventListener('click', async () => {
   const res = await sendMsg('EXPORT_LOCAL');
-  if (!res?.ok) return showToast('내보내기 실패', true);
+  if (!res?.ok) return showToast(t('errExportFailed'), true);
   const blob = new Blob([JSON.stringify(res.snapshot, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `syncfav-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `favosync-backup-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('JSON 백업 파일이 다운로드되었습니다.');
+  showToast(t('toastExportDone'));
 });
 
 el.importJsonBtn.addEventListener('click', () => el.importFileInput.click());
@@ -352,17 +383,17 @@ el.importFileInput.addEventListener('change', async (event) => {
   if (!file) return;
   try {
     const json = JSON.parse(await file.text());
-    if (!json.roots) throw new Error('roots 필드가 없는 잘못된 파일입니다.');
-    if (!confirm('선택한 JSON 파일의 북마크로 현재 브라우저를 복원할까요?')) return;
+    if (!json.roots) throw new Error(t('errInvalidJson'));
+    if (!confirm(t('confirmImport'))) return;
     const res = await sendMsg('IMPORT_JSON', { roots: json.roots });
     if (res?.ok) {
-      showToast('JSON 파일에서 북마크를 복원했습니다.');
+      showToast(t('toastImportDone'));
       await loadDashboard();
     } else {
-      showToast(res?.error || '가져오기 실패', true);
+      showToast(res?.error || t('errImportFailed'), true);
     }
   } catch (err) {
-    showToast(`파일 파싱 오류: ${err.message}`, true);
+    showToast(t('errParseFile', { msg: err.message }), true);
   } finally {
     el.importFileInput.value = '';
   }
@@ -370,7 +401,7 @@ el.importFileInput.addEventListener('change', async (event) => {
 
 el.clearLogsBtn.addEventListener('click', async () => {
   await sendMsg('CLEAR_LOGS');
-  showToast('로그가 비워졌습니다.');
+  showToast(t('toastLogsCleared'));
   await loadDashboard();
 });
 

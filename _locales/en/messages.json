@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "FavoSync - Cross-Browser Bookmark Sync"
+  },
+  "extDescription": {
+    "message": "Automatically sync bookmarks across Ego Lite, Chrome, Edge, and Brave using your own Google Drive."
+  },
+  "actionTitle": {
+    "message": "FavoSync - Bookmark Sync"
+  }
+}

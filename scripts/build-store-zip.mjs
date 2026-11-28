@@ -24,9 +24,12 @@ const storeManifest = { ...manifest };
 delete storeManifest.key;
 fs.writeFileSync(path.join(stageDir, 'manifest.json'), JSON.stringify(storeManifest, null, 2) + '\n');
 
-// 2) 필요한 런타임 디렉토리 복사 (src/, assets/, LICENSE)
+// 2) 필요한 런타임 디렉토리 복사 (src/, assets/, _locales/, LICENSE)
 fs.cpSync(path.join(rootDir, 'src'), path.join(stageDir, 'src'), { recursive: true });
 fs.cpSync(path.join(rootDir, 'assets'), path.join(stageDir, 'assets'), { recursive: true });
+if (fs.existsSync(path.join(rootDir, '_locales'))) {
+  fs.cpSync(path.join(rootDir, '_locales'), path.join(stageDir, '_locales'), { recursive: true });
+}
 if (fs.existsSync(path.join(rootDir, 'LICENSE'))) {
   fs.copyFileSync(path.join(rootDir, 'LICENSE'), path.join(stageDir, 'LICENSE'));
 }

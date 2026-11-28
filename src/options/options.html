@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ko" data-theme="obsidian">
+<html lang="en" data-theme="obsidian">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FavoSync 설정</title>
+    <title>FavoSync Settings</title>
     <link rel="stylesheet" href="../shared/themes.css" />
     <link rel="stylesheet" href="options.css" />
   </head>
@@ -24,37 +24,37 @@
         <div class="sidebar-status">
           <span id="connectionPill" class="status-pill status-idle">
             <span class="status-dot"></span>
-            <span id="connectionLabel">확인 중</span>
+            <span id="connectionLabel" data-i18n="statusChecking">Checking</span>
           </span>
-          <div id="sidebarSummary" class="sidebar-summary">북마크 0개</div>
+          <div id="sidebarSummary" class="sidebar-summary">0 bookmarks</div>
         </div>
 
-        <nav class="nav-menu" aria-label="설정 섹션">
+        <nav class="nav-menu" aria-label="Settings sections">
           <button type="button" class="nav-item active" data-tab="connection">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" /></svg>
-            <span>Google Drive 연결</span>
+            <span data-i18n="navConnection">Google Drive</span>
           </button>
           <button type="button" class="nav-item" data-tab="sync">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10" /><polyline points="1 20 1 14 7 14" /><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" /></svg>
-            <span>동기화 및 수동 제어</span>
+            <span data-i18n="navSync">Sync &amp; Controls</span>
           </button>
           <button type="button" class="nav-item" data-tab="appearance">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 3a9 9 0 0 0 0 18v-9h9a9 9 0 0 0-9-9z" /></svg>
-            <span>외관 및 스킨</span>
+            <span data-i18n="navAppearance">Appearance &amp; Language</span>
           </button>
           <button type="button" class="nav-item" data-tab="backups">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5" /><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" /><polyline points="12 7 12 12 15 15" /></svg>
-            <span>로컬 백업</span>
+            <span data-i18n="navBackups">Local Backups</span>
           </button>
           <button type="button" class="nav-item" data-tab="logs">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
-            <span>활동 로그</span>
+            <span data-i18n="navLogs">Activity Logs</span>
           </button>
         </nav>
 
         <div class="sidebar-footer">
-          <div class="quick-skin-label">빠른 스킨 전환</div>
-          <div class="quick-skin-bar" role="group" aria-label="빠른 스킨 전환">
+          <div class="quick-skin-label" data-i18n="quickSkinLabel">Quick Skin Switch</div>
+          <div class="quick-skin-bar" role="group" aria-label="Quick skin switch">
             <button type="button" class="quick-skin-btn" data-skin="obsidian">Obsidian</button>
             <button type="button" class="quick-skin-btn" data-skin="editorial">Editorial</button>
             <button type="button" class="quick-skin-btn" data-skin="promax">Pro Max</button>
@@ -67,64 +67,59 @@
         <!-- Tab 1: Connection -->
         <section class="panel active" data-panel="connection">
           <header class="panel-header">
-            <h1>Google Drive 연결</h1>
-            <p>Ego Lite, Chrome 등 계정 동기화가 없는 Chromium 브라우저 간 OAuth 2.0으로 안전하게 연결합니다.</p>
+            <h1 data-i18n="connTitle">Google Drive Connection</h1>
+            <p data-i18n="connDesc">Connect securely via OAuth 2.0 across Chromium browsers even without built-in browser account sync.</p>
           </header>
 
           <div id="connectedInfo" class="connected-banner hidden"></div>
 
           <div class="surface-block">
-            <div class="field">
-              <label for="redirectUri">이 브라우저의 Redirect URI</label>
-              <div class="input-with-btn">
-                <input type="text" id="redirectUri" readonly />
-                <button type="button" id="copyRedirectBtn" class="btn btn-secondary">복사</button>
-              </div>
-              <span class="field-hint">manifest 고정 키 덕분에 집컴·회사컴·Chrome 어디서나 동일한 URI가 유지됩니다.</span>
-            </div>
-
             <div class="grid-2">
               <div class="field">
-                <label for="clientId">Google OAuth Client ID</label>
-                <input
-                  type="text"
-                  id="clientId"
-                  placeholder="1234567890-xxxx.apps.googleusercontent.com"
-                />
-              </div>
-              <div class="field">
-                <label for="clientSecret">Client Secret (무제한 자동 토큰 갱신)</label>
-                <input type="password" id="clientSecret" placeholder="GOCSPX-..." />
-              </div>
-            </div>
-
-            <div class="grid-2">
-              <div class="field">
-                <label for="driveFolderName">Google Drive 폴더 이름</label>
+                <label for="driveFolderName" data-i18n="driveFolderLabel">Google Drive Folder Name</label>
                 <input type="text" id="driveFolderName" placeholder="SyncFav" />
               </div>
               <div class="field">
-                <label for="driveFileName">동기화 파일 이름</label>
+                <label for="driveFileName" data-i18n="driveFileLabel">Sync File Name</label>
                 <input type="text" id="driveFileName" placeholder="bookmarks.json" />
               </div>
             </div>
 
             <div class="action-bar">
-              <button type="button" id="connectBtn" class="btn btn-primary">Google Drive 연결</button>
-              <button type="button" id="saveOAuthBtn" class="btn btn-secondary">설정 저장</button>
-              <button type="button" id="disconnectBtn" class="btn btn-danger hidden">연결 해제</button>
+              <button type="button" id="connectBtn" class="btn btn-primary" data-i18n="connectDrive">Connect Google Drive</button>
+              <button type="button" id="saveOAuthBtn" class="btn btn-secondary" data-i18n="saveSettings">Save Settings</button>
+              <button type="button" id="disconnectBtn" class="btn btn-danger hidden" data-i18n="disconnectBtn">Disconnect</button>
             </div>
           </div>
 
           <details class="disclosure">
-            <summary>Google Cloud Console OAuth 설정 가이드 보기</summary>
+            <summary data-i18n="oauthGuideSummary">Using your own Google Cloud OAuth app (Advanced)</summary>
+            <div class="surface-block" style="margin-top: 12px;">
+              <div class="field">
+                <label for="redirectUri" data-i18n="redirectUriLabel">Redirect URI for This Browser</label>
+                <div class="input-with-btn">
+                  <input type="text" id="redirectUri" readonly />
+                  <button type="button" id="copyRedirectBtn" class="btn btn-secondary" data-i18n="copyBtn">Copy</button>
+                </div>
+                <span class="field-hint" data-i18n="redirectUriHint">Register this URI only if you are connecting your own custom Google Cloud OAuth app.</span>
+              </div>
+
+              <div class="grid-2">
+                <div class="field">
+                  <label for="clientId" data-i18n="clientIdLabel">Google OAuth Client ID (Optional)</label>
+                  <input type="text" id="clientId" placeholder="1234567890-xxxx.apps.googleusercontent.com" />
+                </div>
+                <div class="field">
+                  <label for="clientSecret" data-i18n="clientSecretLabel">Client Secret (Optional)</label>
+                  <input type="password" id="clientSecret" placeholder="GOCSPX-..." />
+                </div>
+              </div>
+            </div>
             <ol>
-              <li>
-                <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer">Google Cloud Console</a>에서 프로젝트를 만들고 <strong>Google Drive API</strong>를 사용 설정합니다.
-              </li>
-              <li><strong>OAuth 동의 화면</strong>에서 외부 앱을 구성하고 테스트 사용자에 본인 Gmail을 추가합니다.</li>
-              <li><strong>웹 애플리케이션</strong> OAuth 클라이언트를 만들고 승인된 리디렉션 URI에 위 Redirect URI를 추가합니다.</li>
-              <li>발급된 Client ID와 Client Secret을 입력한 뒤 연결 버튼을 누릅니다.</li>
+              <li data-i18n="oauthGuide1">Create a project in Google Cloud Console and enable the Google Drive API.</li>
+              <li data-i18n="oauthGuide2">Configure the OAuth consent screen as External and add your Gmail as a test user.</li>
+              <li data-i18n="oauthGuide3">Create a Web Application OAuth client and add the Redirect URI above.</li>
+              <li data-i18n="oauthGuide4">Enter your Client ID and Client Secret, then click Connect Google Drive.</li>
             </ol>
           </details>
         </section>
@@ -132,70 +127,81 @@
         <!-- Tab 2: Sync & Manual Control -->
         <section class="panel" data-panel="sync">
           <header class="panel-header">
-            <h1>동기화 및 수동 제어</h1>
-            <p>자동 동기화 주기와 충돌 병합 정책을 관리하고, 필요 시 수동으로 덮어쓰거나 JSON으로 내보냅니다.</p>
+            <h1 data-i18n="syncTitle">Sync &amp; Manual Controls</h1>
+            <p data-i18n="syncDesc">Configure automatic sync intervals and merge rules, or manually push, pull, and export bookmarks as JSON.</p>
           </header>
 
           <div class="surface-block">
             <div class="grid-2">
               <div class="field">
-                <label for="deviceName">기기 이름</label>
-                <input type="text" id="deviceName" placeholder="예: 집컴 Ego Lite" />
+                <label for="deviceName" data-i18n="deviceNameLabel">Device Name</label>
+                <input type="text" id="deviceName" data-i18n-placeholder="deviceNamePlaceholder" placeholder="e.g., Home Ego Lite" />
               </div>
               <div class="field">
-                <label for="syncStrategy">충돌 해결 전략</label>
+                <label for="syncStrategy" data-i18n="strategyLabel">Conflict Resolution Strategy</label>
                 <select id="syncStrategy">
-                  <option value="three_way_merge">스마트 3-Way 병합 (양쪽 변경사항 보존)</option>
-                  <option value="latest_wins">최신 수정 우선 (마지막 수정 기기 기준)</option>
+                  <option value="three_way_merge" data-i18n="strategyThreeWay">Smart 3-Way Merge (Recommended)</option>
+                  <option value="latest_wins" data-i18n="strategyLatest">Latest Wins</option>
                 </select>
               </div>
             </div>
 
             <div class="grid-2">
               <div class="field">
-                <label for="syncIntervalMinutes">주기적 동기화 간격 (분)</label>
+                <label for="syncIntervalMinutes" data-i18n="intervalLabel">Periodic Sync Interval (minutes)</label>
                 <input type="number" id="syncIntervalMinutes" min="1" max="1440" />
               </div>
               <div class="field">
-                <label for="debounceSeconds">변경 감지 후 업로드 대기 (초)</label>
+                <label for="debounceSeconds" data-i18n="debounceLabel">Upload Delay After Edit (seconds)</label>
                 <input type="number" id="debounceSeconds" min="3" max="120" />
               </div>
             </div>
 
             <label class="toggle-row">
               <input type="checkbox" id="autoSync" />
-              <span>자동 동기화 사용 (변경 감지, 주기적 폴링, 브라우저 시작 시 자동 실행)</span>
+              <span data-i18n="autoSyncToggle">Enable automatic sync (on edit, periodic polling, and browser startup)</span>
             </label>
 
             <label class="toggle-row">
               <input type="checkbox" id="failsafeEnabled" />
-              <span>대량 삭제 방지(Failsafe) — 북마크가 30% 이상(최소 50개) 한꺼번에 삭제되려 하면 자동 동기화 중단</span>
+              <span data-i18n="failsafeToggle">Failsafe mass-deletion guard</span>
             </label>
 
             <div class="action-bar">
-              <button type="button" id="saveSyncSettingsBtn" class="btn btn-primary">변경사항 저장</button>
+              <button type="button" id="saveSyncSettingsBtn" class="btn btn-primary" data-i18n="saveChanges">Save Changes</button>
             </div>
           </div>
 
           <div class="surface-block">
-            <h2 class="block-title">수동 동기화 및 파일 백업</h2>
+            <h2 class="block-title" data-i18n="manualControlTitle">Manual Sync &amp; File Backup</h2>
             <div class="action-bar wrap">
-              <button type="button" id="syncNowBtn" class="btn btn-primary">지금 스마트 동기화</button>
-              <button type="button" id="forcePushBtn" class="btn btn-secondary">내 북마크로 Drive 덮어쓰기</button>
-              <button type="button" id="forcePullBtn" class="btn btn-secondary">Drive로 내 브라우저 덮어쓰기</button>
-              <button type="button" id="exportJsonBtn" class="btn btn-secondary">JSON 내보내기</button>
-              <button type="button" id="importJsonBtn" class="btn btn-secondary">JSON 가져오기</button>
+              <button type="button" id="syncNowBtn" class="btn btn-primary" data-i18n="smartSyncNow">Smart Sync Now</button>
+              <button type="button" id="forcePushBtn" class="btn btn-secondary" data-i18n="forcePushBtn">Force Push to Drive</button>
+              <button type="button" id="forcePullBtn" class="btn btn-secondary" data-i18n="forcePullBtn">Force Pull from Drive</button>
+              <button type="button" id="exportJsonBtn" class="btn btn-secondary" data-i18n="exportJsonBtn">Export JSON</button>
+              <button type="button" id="importJsonBtn" class="btn btn-secondary" data-i18n="importJsonBtn">Import JSON</button>
               <input type="file" id="importFileInput" accept=".json,application/json" class="hidden" />
             </div>
           </div>
         </section>
 
-        <!-- Tab 3: Appearance & Skins -->
+        <!-- Tab 3: Appearance & Language -->
         <section class="panel" data-panel="appearance">
           <header class="panel-header">
-            <h1>외관 및 스킨</h1>
-            <p>서로 다른 디자인 철학으로 제작된 3가지 스킨을 실시간으로 전환해 비교해 보세요. 선택한 스킨은 팝업과 설정 화면에 즉시 적용됩니다.</p>
+            <h1 data-i18n="appearanceTitle">Appearance &amp; Language</h1>
+            <p data-i18n="appearanceDesc">Choose your preferred language and switch between 3 distinct visual skins in real time.</p>
           </header>
+
+          <div class="surface-block">
+            <div class="field" style="max-width: 320px;">
+              <label for="uiLanguage" data-i18n="languageLabel">Language</label>
+              <select id="uiLanguage">
+                <option value="auto" data-i18n="langAuto">Auto (System Language)</option>
+                <option value="ko" data-i18n="langKo">한국어</option>
+                <option value="en" data-i18n="langEn">English</option>
+              </select>
+            </div>
+          </div>
 
           <div id="skinCardsGrid" class="skin-grid"></div>
         </section>
@@ -203,8 +209,8 @@
         <!-- Tab 4: Backups -->
         <section class="panel" data-panel="backups">
           <header class="panel-header">
-            <h1>로컬 자동 백업</h1>
-            <p>원격 변경사항을 적용하거나 덮어쓰기 직전마다 현재 브라우저의 북마크를 자동으로 보관합니다 (최근 10개).</p>
+            <h1 data-i18n="backupsTitle">Local Auto Backups</h1>
+            <p data-i18n="backupsDesc">Automatically saves a local restore point right before applying remote updates (keeps last 10).</p>
           </header>
 
           <div id="backupList" class="data-list"></div>
@@ -214,10 +220,10 @@
         <section class="panel" data-panel="logs">
           <header class="panel-header row-between">
             <div>
-              <h1>활동 로그</h1>
-              <p>최근 동기화 및 연결 기록을 시간순으로 확인합니다.</p>
+              <h1 data-i18n="logsTitle">Activity Logs</h1>
+              <p data-i18n="logsDesc">Chronological log of recent sync operations and account events.</p>
             </div>
-            <button type="button" id="clearLogsBtn" class="btn btn-secondary btn-sm">로그 비우기</button>
+            <button type="button" id="clearLogsBtn" class="btn btn-secondary btn-sm" data-i18n="clearLogsBtn">Clear Logs</button>
           </header>
 
           <div id="logList" class="data-list"></div>

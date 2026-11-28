@@ -1,0 +1,11 @@
+{
+  "extName": {
+    "message": "FavoSync - 크로스 브라우저 즐겨찾기 동기화"
+  },
+  "extDescription": {
+    "message": "Google Drive를 통해 Ego Lite, Chrome, Edge, Brave 등 모든 Chromium 브라우저 간 즐겨찾기를 자동 동기화합니다."
+  },
+  "actionTitle": {
+    "message": "FavoSync - 즐겨찾기 동기화"
+  }
+}
